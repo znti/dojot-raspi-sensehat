@@ -12,14 +12,24 @@ device_id = "36fc0a"
 # Internal definitions setup
 client_id = "{}:{}".format(tenant_name, device_id)
 topic_to_publish = "/{}/{}/attrs".format(tenant_name, device_id)
+topic_to_subscribe = "/{}/{}/config".format(tenant_name, device_id)
+
+def on_message(client, userdata, message):
+    decoded_message = json.loads(message.payload.decode())
+    message_text = decoded_message['display']
+    print("Received", decoded_message)
 
 #
 # MQTT Client setup and connection
 client = mqtt.Client(client_id)
+client.on_message = on_message
 
 print("Connecting to mqtt broker")
 client.connect(host='localhost', port=1883)
 client.loop_start()
+
+print("Subscribing to topic", topic_to_subscribe)
+client.subscribe(topic_to_subscribe)
 
 #
 # Raspberry Pi's Sensor initialization
