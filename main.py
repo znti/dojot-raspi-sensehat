@@ -1,3 +1,4 @@
+from sense_emu import SenseHat
 import paho.mqtt.client as mqtt
 import json
 import time
@@ -5,7 +6,7 @@ import time
 #
 # Properties definition
 tenant_name = "admin"
-device_id = "a6559f"
+device_id = "36fc0a"
 
 #
 # Internal definitions setup
@@ -21,13 +22,19 @@ client.connect(host='localhost', port=1883)
 client.loop_start()
 
 #
+# Raspberry Pi's Sensor initialization
+print("Initializing SenseHat emulator")
+sense = SenseHat()
+
+#
 # Execution loop
 while True:
     message = {
-        "temperature" : 35.11,
-        "pressure": 773.29,
-        "humidity": 66.23
+        "temperature" : sense.temperature,
+        "pressure": sense.pressure,
+        "humidity": sense.humidity
     }
     print("Publishing", message, 'to topic', topic_to_publish)
     client.publish(topic_to_publish, json.dumps(message))
     time.sleep(4)
+
