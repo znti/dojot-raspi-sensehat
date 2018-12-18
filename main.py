@@ -18,6 +18,12 @@ def on_message(client, userdata, message):
     decoded_message = json.loads(message.payload.decode())
     message_text = decoded_message['display']
     print("Received", decoded_message)
+    sense.clear()
+    if message_text == "high":
+        sense.show_message("HOT")
+    elif message_text == "low":
+        sense.show_message("COLD")
+
 
 #
 # MQTT Client setup and connection
